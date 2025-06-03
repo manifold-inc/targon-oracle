@@ -1,0 +1,25 @@
+services:
+  oracle:
+    image: manifoldlabs/targon-oracle:${VERSION:-latest}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.oracle.rule=Host(`localhost`)
+      - traefik.http.routers.oracle.tls=false
+      - traefik.http.routers.oracle.tls.certresolver=
+      - traefik.http.services.oracle.loadbalancer.server.port=443
+    env_file: .env
+    build:
+      context: .
+
+  traefik:
+    image: traefik:v2.3
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $PWD/traefik/traefik.dev.toml:/etc/traefik/traefik.toml
+      
+volumes:
+  traefik-public-certificates:
+  cache:
+    driver: local
