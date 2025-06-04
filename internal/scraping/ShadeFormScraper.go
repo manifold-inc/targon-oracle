@@ -3,20 +3,20 @@ package scraping
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 )
 
-func ShadeFormScraper() float64 {
+func ShadeFormScraper() (float64, error) {
 	resp, err := http.Get("https://api.shadeform.ai/v1/instances/types")
 	if err != nil {
-		log.Fatal(err)
+		return -1, err
 	}
+
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		return -1, err
 	}
 
 	var data struct {
@@ -37,7 +37,7 @@ func ShadeFormScraper() float64 {
 	}
 
 	if err := json.Unmarshal(body, &data); err != nil {
-		log.Fatal(err)
+		return -1, err
 	}
 
 	for _, inst := range data.InstanceTypes {
@@ -50,10 +50,10 @@ func ShadeFormScraper() float64 {
 				}
 			}
 			if allUnavailable {
-				return inst.HourlyPrice / 100
+				return inst.HourlyPrice / 100, nil
 			}
 		}
 	}
 
-	return 0
+	return -1, nil
 }
