@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"targon-oracle/internal/routes"
 	"targon-oracle/internal/setup"
 	"targon-oracle/internal/shared"
 
@@ -52,13 +53,7 @@ func main() {
 		return c.String(200, "pong")
 	})
 
-	e.GET("/prices/h200/average", func(c echo.Context) error {
-		// Placeholder response
-		return c.JSON(200, map[string]interface{}{
-			"gpu_type":      "h200",
-			"average_price": 0.0, // Placeholder value
-		})
-	})
+	e.GET("/prices/h200/average", routes.AveragePriceHandler)
 
 	e.Logger.Fatal(e.Start(":443"))
 }
