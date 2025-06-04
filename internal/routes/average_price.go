@@ -7,7 +7,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-//TODO: Implement the average price route
 
 func AveragePriceHandler(c echo.Context) error {
 	togetherPrice := scraping.TogetherScraper()
